@@ -263,7 +263,7 @@ class Emulator:
 			elif(pressed==key.esc):
 				exit()
 
-			
+
 
 		print("Pressed " + str(pressed))
 		if passed:
@@ -353,6 +353,7 @@ state = []
 count = []
 clicktimes = [[]]
 delay = []
+duration = []
 lasttime = get_current_time()
 
 timeclick = []
@@ -368,6 +369,7 @@ for i in range(0, len(keypin)):
 	state.append(GPIO.HIGH)
 	clicktimes.append([get_current_time()])
 	delay.append(0)
+	duration.append(0)
 	count.append(0)
 	
 	timeclick.append(0)
@@ -412,9 +414,9 @@ class keypad:
 					time_at_unclick[i] = get_current_time()
 					state[i] = GPIO.HIGH
 
-					duration = time_at_unclick[i] - time_at_click[i]
+					duration[i] = time_at_unclick[i] - time_at_click[i]
 
-					if(duration>20):
+					if(duration[i]>20):
 						
 						# Handling click without false positive ========================================
 
@@ -426,10 +428,269 @@ class keypad:
 						print("Click approved: " + str(delay[i]) + ' ' + str(count[i]))
 
 
-						# Adding data to string and raw variables
+						# Adding data to "string" and "raw" variables so main thread can read string provided by user
+
+
+						# Raw data
+
+						buffer = []
+						stringbuffer = ""
+
+						for element in self.raw:
+							buffer+=element
 
 						
 
+						if(i==0):
+							buffer+="0"
+						elif(i==1):
+							buffer+="1"
+						elif(i==2):
+							buffer+="2"
+						elif(i==3):
+							buffer+="3"
+						elif(i==4):
+							buffer+="4"
+						elif(i==5):
+							buffer+="5"
+						elif(i==6):
+							buffer+="6"
+						elif(i==7):
+							buffer+="7"
+						elif(i==8):
+							buffer+="8"
+						elif(i==9):
+							buffer+="9"
+						elif(i==10):
+							buffer+="\n"
+						elif(i==11):
+							if (len(self.raw)>0):
+								buffer.pop()
+						elif(i==12):
+							buffer=""
+
+
+						for e in buffer:
+							stringbuffer+=e
+						
+
+						self.raw = stringbuffer
+
+						print(self.raw)
+
+						# String data
+
+						buffer = []
+						stringbuffer = ""
+
+						for element in self.string:
+							buffer+=element
+
+						lastchar = ""
+
+						if(len(buffer)>0):
+							lastchar = buffer[len(self.string)-1]
+
+
+						if(i==0):
+							if(delay[i]<=100):
+								
+								if(lastchar=="0"): # nth click (Special click)
+									buffer.pop()
+									buffer+=" "
+								elif(lastchar==" "):
+									buffer.pop()
+									buffer+="0"
+								else:
+									buffer+="0" # Normal click
+									
+							else:	# Normal click
+								buffer+="0"
+							
+						elif(i==1):
+							buffer+="1"
+						elif(i==2):
+							if(delay[i]<=100):
+								
+								if(lastchar=="2"): # nth click (Special click)
+									buffer.pop()
+									buffer+="a"
+								elif(lastchar=="a"):
+									buffer.pop()
+									buffer+="b"
+								elif(lastchar=="b"):
+									buffer.pop()
+									buffer+="c"
+								elif(lastchar=="c"):
+									buffer.pop()
+									buffer+="2"
+								else:
+									buffer+="2" # Normal click
+									
+							else:	# Normal click
+								buffer+="2"
+						elif(i==3):
+							if(delay[i]<=100):
+								
+								if(lastchar=="3"): # nth click (Special click)
+									buffer.pop()
+									buffer+="d"
+								elif(lastchar=="d"):
+									buffer.pop()
+									buffer+="e"
+								elif(lastchar=="e"):
+									buffer.pop()
+									buffer+="f"
+								elif(lastchar=="f"):
+									buffer.pop()
+									buffer+="3"
+								else:
+									buffer+="3" # Normal click
+									
+							else:	# Normal click
+								buffer+="3"
+						elif(i==4):
+							if(delay[i]<=100):
+								
+								if(lastchar=="4"): # nth click (Special click)
+									buffer.pop()
+									buffer+="g"
+								elif(lastchar=="g"):
+									buffer.pop()
+									buffer+="h"
+								elif(lastchar=="h"):
+									buffer.pop()
+									buffer+="i"
+								elif(lastchar=="i"):
+									buffer.pop()
+									buffer+="4"
+								else:
+									buffer+="4" # Normal click
+									
+							else:	# Normal click
+								buffer+="4"
+						elif(i==5):
+							if(delay[i]<=100):
+								
+								if(lastchar=="5"): # nth click (Special click)
+									buffer.pop()
+									buffer+="j"
+								elif(lastchar=="j"):
+									buffer.pop()
+									buffer+="k"
+								elif(lastchar=="k"):
+									buffer.pop()
+									buffer+="l"
+								elif(lastchar=="l"):
+									buffer.pop()
+									buffer+="5"
+								else:
+									buffer+="5" # Normal click
+									
+							else:	# Normal click
+								buffer+="5"
+						elif(i==6):
+							if(delay[i]<=100):
+								
+								if(lastchar=="6"): # nth click (Special click)
+									buffer.pop()
+									buffer+="d"
+								elif(lastchar=="d"):
+									buffer.pop()
+									buffer+="e"
+								elif(lastchar=="e"):
+									buffer.pop()
+									buffer+="f"
+								elif(lastchar=="f"):
+									buffer.pop()
+									buffer+="6"
+								else:
+									buffer+="6" # Normal click
+									
+							else:	# Normal click
+								buffer+="6"
+						elif(i==7):
+							if(delay[i]<=100):
+								
+								if(lastchar=="7"): # nth click (Special click)
+									buffer.pop()
+									buffer+="p"
+								elif(lastchar=="p"):
+									buffer.pop()
+									buffer+="q"
+								elif(lastchar=="q"):
+									buffer.pop()
+									buffer+="r"
+								elif(lastchar=="r"):
+									buffer.pop()
+									buffer+="s"
+								elif(lastchar=="s"):
+									buffer.pop()
+									buffer+="7"
+								else:
+									buffer+="7" # Normal click
+									
+							else:	# Normal click
+								buffer+="7"
+						elif(i==8):
+							if(delay[i]<=100):
+								
+								if(lastchar=="8"): # nth click (Special click)
+									buffer.pop()
+									buffer+="t"
+								elif(lastchar=="t"):
+									buffer.pop()
+									buffer+="u"
+								elif(lastchar=="u"):
+									buffer.pop()
+									buffer+="v"
+								elif(lastchar=="v"):
+									buffer.pop()
+									buffer+="8"
+								else:
+									buffer+="8" # Normal click
+									
+							else:	# Normal click
+								buffer+="8"
+						elif(i==9):
+							if(delay[i]<=100):
+								
+								if(lastchar=="9"): # nth click (Special click)
+									buffer.pop()
+									buffer+="w"
+								elif(lastchar=="w"):
+									buffer.pop()
+									buffer+="x"
+								elif(lastchar=="x"):
+									buffer.pop()
+									buffer+="y"
+								elif(lastchar=="y"):
+									buffer.pop()
+									buffer+="z"
+								elif(lastchar=="z"):
+									buffer.pop()
+									buffer+="9"
+								else:
+									buffer+="9" # Normal click
+									
+							else:	# Normal click
+								buffer+="9"
+						elif(i==10):
+							buffer+="\n"
+						elif(i==11):
+							if (len(self.string)>0):
+								buffer.pop()
+						elif(i==12):
+							buffer=""
+
+
+						for e in buffer:
+							stringbuffer+=e
+						
+
+						self.string = stringbuffer
+
+						print(self.string)
 
 						# =======================================
 
@@ -439,21 +700,8 @@ class keypad:
 					print("Duration: " + str(duration))
 
 
-def main_f():
-	while True:
-		if not (stupid_T9.string.find('\n')==-1):
-			print(stupid_T9.string)
-			stupid_T9.string = ""
-
-
-
-print("gfousy9sou")
 
 stupid_T9 = keypad()
-
-
-# main = threading.Thread(target=main_f, args=())
-# main.start()
 
 
 get_string = threading.Thread(target=stupid_T9.listen, args=())
@@ -461,13 +709,19 @@ get_string.start()
 
 
 
-
 read = threading.Thread(target=GPIO.read, args=())
 read.start()
 
 
+stupid_T9.string = ""	# Clear the string first to prevent weird things from happening
 
+while True:
+	if "\n" in stupid_T9.string:
+		print("Entered " + stupid_T9.string.removesuffix("\n"))
 
+		# print(sendmessage(stupid_T9.string.removesuffix("\n"), phonenumber, apiSecret, id))
 
-# finally:
-# 	GPIO.cleanup()
+		stupid_T9.string = ""
+	time.sleep(0.1)
+
+# GPIO.cleanup()
